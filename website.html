@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLOCK G | Official Music Group</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --primary-accent: #7c4dff;
+            --secondary-accent: #00e5ff;
+            --text-main: #ffffff;
+            --text-dim: #b3b3b3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            width: 100%;
+            padding: 60px 0;
+            text-align: center;
+            background: linear-gradient(to bottom, #1a1a1a, var(--bg-color));
+            letter-spacing: 4px;
+        }
+
+        header h1 { margin: 0; font-size: 3rem; color: var(--primary-accent); }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto 50px auto;
+        }
+
+        section h2 {
+            text-align: center;
+            border-bottom: 2px solid var(--primary-accent);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        /* Member List Style */
+        .member-card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .member-card:hover { transform: scale(1.02); border-color: var(--primary-accent); }
+
+        .avatar {
+            width: 60px; height: 60px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; font-weight: bold; margin-right: 20px;
+        }
+
+        /* Events Section */
+        .event-card {
+            background: #252525;
+            padding: 15px;
+            border-left: 4px solid var(--secondary-accent);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .event-date { color: var(--secondary-accent); font-weight: bold; width: 80px; }
+
+        /* Booking Form */
+        .booking-form {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        .booking-form input, .booking-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .btn-submit {
+            background: var(--primary-accent);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* Modal styling kept from previous version */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background-color: var(--card-bg); width: 90%; max-width: 500px; padding: 30px; border-radius: 20px; position: relative; animation: slideUp 0.3s ease-out; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>BLOCK G</h1>
+    </header>
+
+    <div class="container">
+        <section>
+            <h2>THE COLLECTIVE</h2>
+            <div id="memberList"></div>
+        </section>
+
+        <section>
+            <h2>UPCOMING GIGS</h2>
+            <div class="event-card">
+                <div class="event-date">MAY 24</div>
+                <div><strong>Nairobi Festival</strong><br><small>KICC Grounds</small></div>
+                <div><small>8:00 PM</small></div>
+            </div>
+            <div class="event-card">
+                <div class="event-date">JUN 05</div>
+                <div><strong>BlockG Live: Listening Party</strong><br><small>The Alchemist, Westlands</small></div>
+                <div><small>10:00 PM</small></div>
+            </div>
+        </section>
+
+        <section>
+            <h2>BOOK BLOCK G</h2>
+            <div class="booking-form">
+                <form onsubmit="alert('Booking Request Sent! JemmoG will contact you soon.'); return false;">
+                    <input type="text" placeholder="Full Name / Organization" required>
+                    <input type="email" placeholder="Email Address" required>
+                    <input type="text" placeholder="Event Location (e.g., Mombasa, Nairobi)" required>
+                    <textarea rows="4" placeholder="Event Details (Date, Duration, Budget)"></textarea>
+                    <button type="submit" class="btn-submit">SEND BOOKING REQUEST</button>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <div id="memberModal" class="modal">
+        <div class="modal-content">
+            <span style="float:right; cursor:pointer;" onclick="closeModal()">&times;</span>
+            <div id="modalRole" style="font-weight: bold; letter-spacing: 1px;"></div>
+            <h2 id="modalName" style="margin-top: 10px;"></h2>
+            <hr style="border: 0; border-top: 1px solid #444; margin: 20px 0;">
+            <div id="modalBio" style="line-height: 1.6; color: #b3b3b3;"></div>
+        </div>
+    </div>
+
+    <script>
+        const members = [
+            { name: "Kevoh", role: "Producer", color: "#448aff", bio: "Stoner is the strategic engine behind BlockG, specializing in Executive Production and Artist Development..." },
+            { name: "Wessly", role: "Rapper", color: "#ff5252", bio: "Known for his infectious energy and razor-sharp Sheng wordplay, Wessly is a powerhouse in the Gengetone scene..." },
+            { name: "Phill", role: "Rapper", color: "#69f0ae", bio: "Phill is a lyrical architect whose verses serve as a mirror to the realities of Nairobi urban life..." },
+            { name: "JemmoG", role: "Event Organizer", color: "#ffab40", bio: "JemmoG is the powerhouse behind BlockG’s live experiences, managing logistics from NEMA to stage production." },
+            { name: "Voke", role: "Background Sound", color: "#e040fb", bio: "Every movement needs a heartbeat, and for BlockG, that heartbeat is Voke, the digital presence lead." }
+        ];
+
+        const listContainer = document.getElementById('memberList');
+        members.forEach((m, index) => {
+            const card = document.createElement('div');
+            card.className = 'member-card';
+            card.onclick = () => {
+                document.getElementById('modalRole').innerText = m.role.toUpperCase();
+                document.getElementById('modalRole').style.color = m.color;
+                document.getElementById('modalName').innerText = m.name;
+                document.getElementById('modalBio').innerText = m.bio;
+                document.getElementById('memberModal').style.display = 'flex';
+            };
+            card.innerHTML = `<div class="avatar" style="background-color: ${m.color}">${m.name[0]}</div>
+                              <div class="info"><h2>${m.name}</h2><p>${m.role}</p></div>`;
+            listContainer.appendChild(card);
+        });
+
+        function closeModal() { document.getElementById('memberModal').style.display = 'none'; }
+    </script>
+</body>
+</html>
